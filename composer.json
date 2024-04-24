@@ -1,0 +1,17 @@
+{
+    "name": "beyond88/hubcentral",
+    "description": "HubCentral: Centralize Order Management. Empower Customer Support.",
+    "autoload": {
+        "psr-4": {
+            "HubCentral\\": "includes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mohiuddin Abdul Kader",
+            "email": "muhin.cse.diu@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
