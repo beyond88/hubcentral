@@ -15,5 +15,10 @@
     "minimum-stability": "dev",
     "require": {
         "guzzlehttp/guzzle": "8.0.x-dev"
+    },
+    "config": {
+        "allow-plugins": {
+            "johnpbloch/wordpress-core-installer": true
+        }
     }
 }
