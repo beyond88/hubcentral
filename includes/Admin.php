@@ -16,11 +16,7 @@ class Admin {
      * @return  void
      */
     function __construct() {
-        // $main = new Admin\Main();
-        // $this->dispatch_actions( $main );
-
-        // new Admin\Menu( $main );
-        // new Admin\PluginMeta();
+        new Admin\Main();
     }
 
     /**

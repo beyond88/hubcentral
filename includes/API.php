@@ -1,6 +1,6 @@
 <?php
-
 namespace HubCentral;
+use HubCentral\API\Resources\Order;
 
 /**
  * API Class
@@ -27,5 +27,21 @@ class API {
      * @param   none
      * @return  void
      */
-    public function register_api() {}
+    public function register_api() {
+
+        $order = new Order();
+
+        register_rest_route('hubcentral/v1', '/order', array(
+            'methods' => 'POST',
+            'callback' => array( $order, 'create_order'),
+            'permission_callback' => '__return_true',
+        ));
+
+
+        register_rest_route('hubcentral/v1', '/order/delete', array(
+            'methods' => 'POST',
+            'callback' => array( $order, 'delete_order'),
+            'permission_callback' => '__return_true',
+        ));
+    }
 }
