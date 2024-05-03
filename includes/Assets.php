@@ -20,7 +20,7 @@ class Assets
     {
 
         add_action('wp_enqueue_scripts', array($this, 'register_assets'));
-        //add_action('admin_enqueue_scripts', array($this, 'register_admin_assets'));
+        add_action('admin_enqueue_scripts', array($this, 'register_admin_assets'));
     }
 
     /**
@@ -141,28 +141,23 @@ class Assets
      */
     public function register_admin_assets()
     {
-        $scripts = $this->get_admin_scripts();
+        // $scripts = $this->get_admin_scripts();
         $styles  = $this->get_admin_styles();
 
-        foreach ($scripts as $handle => $script) {
-            $deps = isset($script['deps']) ? $script['deps'] : false;
-            $type = isset($script['type']) ? $script['type'] : '';
-            if (isset($_GET['page']) && $_GET['page'] == 'HUBCENTRAL') {
-            }
-            wp_enqueue_script($handle, $script['src'], $deps, $script['version'], true);
-        }
+        // foreach ($scripts as $handle => $script) {
+        //     $deps = isset($script['deps']) ? $script['deps'] : false;
+        //     $type = isset($script['type']) ? $script['type'] : '';
+        //     wp_enqueue_script($handle, $script['src'], $deps, $script['version'], true);
+        // }
 
         foreach ($styles as $handle => $style) {
             $deps = isset($style['deps']) ? $style['deps'] : false;
             $type = isset($script['type']) ? $script['type'] : '';
-
             wp_enqueue_style($handle, $style['src'], $deps, $style['version']);
         }
 
-        wp_localize_script('HUBCENTRAL-admin-script', 'HUBCENTRAL', array(
-            'nonce' => wp_create_nonce('HUBCENTRAL-admin-nonce'),
-            'confirm' => __('Are you sure?', 'HUBCENTRAL'),
-            'error' => __('Something went wrong', 'HUBCENTRAL'),
+        wp_localize_script('hubcentral-admin-script', 'hubcentral', array(
+            'nonce' => wp_create_nonce('hubcentral-admin-nonce'),
         ));
     }
 }

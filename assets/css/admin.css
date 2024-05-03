@@ -1,0 +1,155 @@
+.hubcentral-settings-wrap {
+  padding: 15px;
+}
+
+.hubcentral-settings-header {
+  height: auto;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  -webkit-display: flex;
+  display: flex;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px 5px;
+}
+
+.hubcentral-settings-header .hubcentral-header-full,
+.hubcentral-settings-header .hubcentral-header-right {
+  flex: 1 1 auto;
+}
+
+.hubcentral-settings-header .hubcentral-header-full {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.hubcentral-settings-header .hubcentral-header-full .title {
+  font-size: 22px;
+  color: #444;
+  font-weight: 600;
+  margin: 0px;
+  line-height: 35px;
+}
+
+.hubcentral-left-right-settings {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.hubcentral-settings {
+  flex: 1;
+}
+
+.hubcentral-settings-content {
+  display: flex;
+}
+
+.hubcentral-settings-form-wrapper {
+  margin-top: 5px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
+.hubcentral-settings-form-wrapper {
+  flex: 10;
+}
+
+.hubcentral-settings-wrap form {
+  border-radius: 8px;
+}
+
+.hubcentral-settings-section table {
+  width: 100%;
+}
+.hubcentral-settings-section > table {
+  border-spacing: 0px 10px;
+}
+
+.hubcentral-settings-section tr th {
+  width: 280px;
+}
+.hubcentral-settings-section tr th {
+  padding: 10px 15px;
+  width: 30%;
+  text-align: left;
+  vertical-align: top;
+}
+.hubcentral-label {
+  position: relative;
+}
+
+.hubcentral-settings-section label {
+  font-size: 14px;
+}
+.hubcentral-settings-wrap label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.hubcentral-settings-section tr td {
+  padding: 5px 15px;
+}
+
+.hubcentral-control-wrapper {
+  position: relative;
+}
+
+.hubcentral-settings-section input.hubcentral-settings-field[type="text"] {
+  width: 82%;
+  max-width: 300px;
+  padding: 8px 10px;
+}
+input[type="text"].hubcentral-meta-field,
+input[type="text"].hubcentral-settings-field,
+input[type="number"].hubcentral-meta-field,
+input[type="number"].hubcentral-settings-field,
+.hubcentral-countdown-input > input[type="number"] {
+  background-color: #f2f2f2;
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: border linear 0.2s, box-shadow linear 0.2s;
+  font-size: 14px;
+  color: #2c3338;
+}
+
+.hubcentral-settings-tab.active {
+  display: block;
+}
+.hubcentral-settings-tab {
+  background: #fff;
+  margin-top: 5px;
+  padding: 15px 25px;
+  border-top: none;
+  position: relative;
+  display: none;
+}
+
+.hubcentral-settings-wrap p.submit {
+  margin-left: 40px;
+}
+
+.hubcentral-settings-button {
+  background-color: rgb(102, 72, 254);
+  background-image: -webkit-linear-gradient(-169deg, #a36597 0%, #bb77ae 100%);
+  color: rgb(255, 255, 255);
+  letter-spacing: 1px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+  border-width: 0px;
+  border-style: initial;
+  border-color: initial;
+  border-image: initial;
+  padding: 13px 25px;
+  border-radius: 3px;
+  margin: 30px 0px;
+  transition: all 0.3s ease 0s;
+}
