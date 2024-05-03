@@ -2,6 +2,8 @@
 
 namespace HubCentral\Frontend\Shortcodes;
 
+use HubCentral\Helper;
+
 /**
  * The admin class
  */
@@ -52,11 +54,7 @@ class OrderTable
      */
     public function hub_order_list($atts)
     {
-        // Check if the user has the required role
-        if (!current_user_can('administrator') && !current_user_can('customer_support')) {
-            // If the user does not have the required role, display a message
-            return '<div class="table-container-blur"><p>Access to this table is restricted. Please contact an administrator or customer support for assistance.</p></div>';
-        }
+
         $this->atts = shortcode_atts(array(), $atts);
 
         return $this->output();
@@ -113,10 +111,14 @@ class OrderTable
         // Render the Vue component
 ?>
         <div id="hub-order-list">
-            <div>
-                <input type="text" v-model="searchQuery" placeholder="Search...">
-                <button @click="search">Search</button>
-            </div>
+            <?php
+            if (Helper::user_has_permission()) {
+            ?>
+                <div>
+                    <input type="text" v-model="searchQuery" placeholder="Search...">
+                    <button @click="search">Search</button>
+                </div>
+            <?php } ?>
             <!-- Dropdown menu for selecting items per page -->
             <div>
                 <label for="pageSize">Items per page:</label>
@@ -124,6 +126,7 @@ class OrderTable
                     <option v-for="option in pageSizeOptions" :value="option">{{ option }}</option>
                 </select>
             </div>
+
             <table>
                 <thead>
                     <tr>
@@ -135,6 +138,7 @@ class OrderTable
                         <th>Shipping Date</th>
                         <th>Customer Notes</th>
                         <th>Order Notes</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -147,6 +151,19 @@ class OrderTable
                         <td>{{ order.shipping_date }}</td>
                         <td>{{ order.customer_note }}</td>
                         <td>{{ order.order_notes }}</td>
+                        <td>
+                            <?php
+                            if (Helper::user_has_permission()) {
+                            ?>
+                                <button type="button" class="action-view-order" @click="openPopup(order)">
+                                    <?php echo __('View', 'hubcentral'); ?>
+                                </button>
+                            <?php } else { ?>
+                                <button type="button" class="action-read-only">
+                                    <?php echo __('View', 'hubcentral'); ?>
+                                </button>
+                            <?php } ?>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -155,10 +172,28 @@ class OrderTable
                 <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
                 <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
             </div>
+
+            <!-- Popup -->
+            <div class="hc-popup">
+                <div class="hc-popup-content">
+                    <h2>Order Details - {{ selectedOrder.id }}</h2>
+                    <div>
+                        <label for="status">Status:</label>
+                        <select v-model="selectedOrder.status" @change="updateOrderStatus">
+                            <option v-for="(label, code) in orderStatuses" :value="code.replace('wc-', '')" :selected="code.replace('wc-', '') === selectedOrder.status">{{ label }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="notes">Order Notes:</label>
+                        <textarea v-model="selectedOrder.order_notes" @change="updateOrderNotes"></textarea>
+                    </div>
+                    <button @click="closePopup">Close</button>
+                    <button @click="updateOrder">Update</button>
+                </div>
+            </div>
         </div>
 
         <?php
-
         // Pass formatted order data to Vue component
         ?>
         <script type="text/javascript">

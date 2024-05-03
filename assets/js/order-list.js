@@ -6,6 +6,17 @@ new Vue({
         currentPage: 1,
         pageSizeOptions: [5, 10, 20], // Options for items per page
         selectedPageSize: 5, // Default selected items per page
+        isPopupOpen: false,
+        selectedOrder: {}, // Selected order object to display in the popup
+        orderStatuses: {
+            'wc-pending': 'Pending',
+            'wc-processing': 'Processing',
+            'wc-completed': 'Completed',
+            'wc-on-hold': 'On Hold',
+            'wc-cancelled': 'Cancelled',
+            'wc-refunded': 'Refunded',
+            'wc-failed': 'Failed'
+        }
     },
     computed: {
         // Filtered orders based on search query
@@ -47,6 +58,39 @@ new Vue({
         // Reset pagination and search query
         search() {
             this.currentPage = 1;
+        },
+        openPopup(order) {
+            // Open the popup and set the selected order
+            const popup = document.querySelector('.hc-popup');
+            if (popup) {
+                popup.classList.add('show-popup');
+            }
+            this.isPopupOpen = true;
+            this.selectedOrder = order;
+
+        },
+        closePopup() {
+            // Close the popup
+            this.isPopupOpen = false;
+            const popup = document.querySelector('.hc-popup');
+            if (popup) {
+                popup.classList.remove('show-popup');
+            }
+        },
+        updateOrderStatus() {
+            // Implement logic to update order status in the database or send to server
+            console.log('Order status updated:', this.selectedOrder.status);
+        },
+        updateOrderNotes() {
+            // Implement logic to update order notes in the database or send to server
+            console.log('Order notes updated:', this.selectedOrder.order_notes);
+        },
+
+        updateOrder() {
+            // Implement logic to update order notes in the database or send to server
+            console.log('order id:', this.selectedOrder.id);
+            console.log('Order status:', this.selectedOrder.status);
+            console.log('Order notes:', this.selectedOrder.order_notes);
         }
     },
     created() {
