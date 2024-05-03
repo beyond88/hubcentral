@@ -52,6 +52,11 @@ class OrderTable
      */
     public function hub_order_list($atts)
     {
+        // Check if the user has the required role
+        if (!current_user_can('administrator') && !current_user_can('customer_support')) {
+            // If the user does not have the required role, display a message
+            return '<div class="table-container-blur"><p>Access to this table is restricted. Please contact an administrator or customer support for assistance.</p></div>';
+        }
         $this->atts = shortcode_atts(array(), $atts);
 
         return $this->output();
