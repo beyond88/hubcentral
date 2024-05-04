@@ -9,8 +9,23 @@ use Automattic\WooCommerce\Client;
 class Order
 {
 
+    /**
+     * Holds the settings data retrieved from the database.
+     *
+     * @var     array   $settings   The settings data retrieved from the database.
+     * @access  private
+     */
     private $settings;
 
+    /**
+     * Constructor method for the class.
+     *
+     * Initializes the settings property with the option values retrieved from the database.
+     *
+     * @since  	1.0.0
+     * @access	public
+     * @return 	void
+     */
     public function __construct()
     {
         $this->settings = get_option('hubcentral_settings');
@@ -137,12 +152,15 @@ class Order
     }
 
     /**
-     * Delete order
+     * Output the sections for the settings page.
+     * 
+     * This method generates HTML markup to display sections 
+     * in the settings page. It checks for the current section 
+     * and applies appropriate CSS class for styling.
      * 
      * @since  	1.0.0
      * @access	public
-     * @param WP_REST_Request $request The REST request object.
-     * @return WP_REST_Response The REST response object.
+     * @return 	void
      */
     public function delete_order(WP_REST_Request $request)
     {
