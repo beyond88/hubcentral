@@ -1,13 +1,13 @@
 new Vue({
     el: '#hub-order-list',
     data: {
-        orders: [], // Initialize orders as an empty array
+        orders: [],
         searchQuery: '',
         currentPage: 1,
-        pageSizeOptions: [5, 10, 20], // Options for items per page
-        selectedPageSize: 5, // Default selected items per page
+        pageSizeOptions: [5, 10, 20],
+        selectedPageSize: 5, 
         isPopupOpen: false,
-        selectedOrder: {}, // Selected order object to display in the popup
+        selectedOrder: {},
         orderStatuses: {
             'wc-pending': 'Pending',
             'wc-processing': 'Processing',
@@ -16,10 +16,12 @@ new Vue({
             'wc-cancelled': 'Cancelled',
             'wc-refunded': 'Refunded',
             'wc-failed': 'Failed'
-        }
+        },
+        isLoading: false,
+        baseURL: window.location.origin,
+
     },
     computed: {
-        // Filtered orders based on search query
         filteredOrders() {
             return this.orders.filter(order =>
                 order.id.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -32,35 +34,29 @@ new Vue({
                 order.order_notes.toLowerCase().includes(this.searchQuery.toLowerCase())
             );
         },
-        // Total number of pages based on filtered orders and page size
         totalPages() {
             return Math.ceil(this.filteredOrders.length / this.selectedPageSize);
         },
-        // Paginated orders based on current page and page size
         paginatedOrders() {
             const startIndex = (this.currentPage - 1) * this.selectedPageSize;
             return this.filteredOrders.slice(startIndex, startIndex + this.selectedPageSize);
         }
     },
     methods: {
-        // Go to the next page
         nextPage() {
             if (this.currentPage < this.totalPages) {
                 this.currentPage++;
             }
         },
-        // Go to the previous page
         prevPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
             }
         },
-        // Reset pagination and search query
         search() {
             this.currentPage = 1;
         },
         openPopup(order) {
-            // Open the popup and set the selected order
             const popup = document.querySelector('.hc-popup');
             if (popup) {
                 popup.classList.add('show-popup');
@@ -70,7 +66,6 @@ new Vue({
 
         },
         closePopup() {
-            // Close the popup
             this.isPopupOpen = false;
             const popup = document.querySelector('.hc-popup');
             if (popup) {
@@ -78,23 +73,41 @@ new Vue({
             }
         },
         updateOrderStatus() {
-            // Implement logic to update order status in the database or send to server
             console.log('Order status updated:', this.selectedOrder.status);
         },
         updateOrderNotes() {
-            // Implement logic to update order notes in the database or send to server
             console.log('Order notes updated:', this.selectedOrder.order_notes);
         },
 
-        updateOrder() {
-            // Implement logic to update order notes in the database or send to server
-            console.log('order id:', this.selectedOrder.id);
-            console.log('Order status:', this.selectedOrder.status);
-            console.log('Order notes:', this.selectedOrder.order_notes);
+        async updateOrder() {
+            if(this.selectedOrder.id !=='' && this.selectedOrder.status !==''){
+
+                const updateButton = document.getElementById('hc-update-order');
+
+                try {
+                    updateButton.disabled = true;
+                    updateButton.textContent = 'Updating...';
+
+                    const response = await axios.put(`${this.baseURL}/wp-json/hubcentral/v1/order/update`, {
+                        id: this.selectedOrder.id,
+                        status: this.selectedOrder.status,
+                        note: this.selectedOrder.order_notes,
+                        hub_item_id: this.selectedOrder.hub_item_id,
+                    }, {});
+                    this.isLoading.value = false;
+                } catch (error) {
+                    this.isLoading.value = false;
+                    console.error('Error updating order status and adding note:', error.response.data);
+                }
+                finally {
+                    // Restore original button label and enable button
+                    updateButton.disabled = false;
+                    updateButton.textContent = 'Update';
+                }
+            }
         }
     },
     created() {
-        // Initialize orders with the data passed from PHP
         this.orders = ordersData;
     }
 });

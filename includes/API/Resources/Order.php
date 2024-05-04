@@ -4,12 +4,16 @@ namespace HubCentral\API\Resources;
 
 use WP_REST_Request;
 use WP_REST_Response;
+use Automattic\WooCommerce\Client;
 
 class Order
 {
 
+    private $settings;
+
     public function __construct()
     {
+        $this->settings = get_option('hubcentral_settings');
     }
 
     /**
@@ -21,8 +25,6 @@ class Order
     public function create_order(WP_REST_Request $request)
     {
         $data = $request->get_params();
-
-        // error_log('Order data sent to Hub successfully: ' . print_r($data, true));
 
         if (!$data) {
             return new WP_REST_Response(array('error' => 'Invalid data'), 400);
@@ -65,6 +67,76 @@ class Order
     }
 
     /**
+     * Handle POST request from HubCentral to update order status and add a note.
+     *
+     * @param WP_REST_Request $request The REST request object.
+     * @return WP_REST_Response The REST response object.
+     */
+    public function update_order(WP_REST_Request $request)
+    {
+        $data = $request->get_params();
+
+        if (!$data) {
+            return new WP_REST_Response(array('error' => 'Invalid data'), 400);
+        }
+
+        $woocommerce = new Client(
+            esc_url($this->settings['base_url']),
+            esc_attr($this->settings['consumer_key']),
+            esc_attr($this->settings['consumer_secret']),
+            [
+                'wp_api' => true,
+                'version' => 'wc/v3'
+            ]
+        );
+
+        // Prepare data to update order
+        $order_id = intval($data['id']);
+        $order_data = array(
+            'status' => $data['status'],
+        );
+
+        try {
+
+            if (isset($data['note']) && !empty($data['note'])) {
+
+                $existing_notes = $woocommerce->get("orders/$order_id/notes");
+
+                $updated_note = '';
+                if ($existing_notes) {
+                    foreach ($existing_notes as $note) {
+                        $updated_note .= $note->content . "\n"; // Replace "\n" with your desired separator
+                    }
+                }
+                $updated_note .= $data['note'];
+
+                $note_data = [
+                    'note' => trim($updated_note), // Remove leading/trailing whitespace
+                ];
+
+                // Update the order note
+                $woocommerce->post("orders/$order_id/notes", $note_data);
+            }
+
+            // Update order using WooCommerce REST API
+            $response = $woocommerce->put('orders/' . $order_id, $order_data);
+
+            // Check for successful update
+            if (isset($response->id)) {
+
+                update_post_meta($data['hub_item_id'], 'status', $data['status']);
+                update_post_meta($data['hub_item_id'], 'order_notes', $data['note']);
+
+                return new WP_REST_Response(array('success' => true, 'response' => $response), 200);
+            } else {
+                return new WP_REST_Response(array('error' => 'Failed to update order'), 500);
+            }
+        } catch (\Exception $e) {
+            return new WP_REST_Response(array('error' => $e->getMessage()), 500);
+        }
+    }
+
+    /**
      * Delete order
      * 
      * @since  	1.0.0
@@ -86,8 +158,8 @@ class Order
 
         // Check if the order exists
         $order = get_post($order_id);
-        if (!$order || $order->post_type !== 'order') {
-            return new WP_REST_Response(array('error' => 'Order not found'), 404);
+        if (!$order || $order->post_type !== 'orders') {
+            return new WP_REST_Response(array('error' => 'Order entry not found in the hub center, ' . $order_id . ''), 200);
         }
 
         // Delete the order and all its meta
@@ -96,7 +168,7 @@ class Order
         if ($deleted) {
             return new WP_REST_Response(array('success' => true), 200);
         } else {
-            return new WP_REST_Response(array('error' => 'Failed to delete order'), 500);
+            return new WP_REST_Response(array('error' => 'Failed to delete order'), 200);
         }
     }
 }

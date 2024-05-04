@@ -1,16 +1,13 @@
 <?php
 settings_errors();
 $setting_options = wp_parse_args(get_option($this->_optionName), $this->_defaultOptions);
-// echo "<pre>";
-// print_r($setting_options);
-// echo "</pre>";
 ?>
 
 <div class="hubcentral-settings-wrap">
 
     <div class="hubcentral-settings-header">
         <div class="hubcentral-header-full">
-            <h2 class="title">HubCentral Settings</h2>
+            <h2 class="title"><?php echo __('HubCentral Settings', 'hubcentral'); ?></h2>
         </div>
     </div>
     <div class="hubcentral-left-right-settings">

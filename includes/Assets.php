@@ -89,9 +89,7 @@ class Assets
             wp_enqueue_style($handle, $style['src'], $deps, $style['version']);
         }
 
-        wp_localize_script('HUBCENTRAL-script', 'ajax', array(
-            'ajax_url'                     => admin_url('admin-ajax.php'),
-        ));
+        wp_localize_script('hubcentral-script', 'ajax', array());
     }
 
     /**
@@ -105,7 +103,7 @@ class Assets
     public function get_admin_scripts()
     {
         return array(
-            'HUBCENTRAL-admin-script' => array(
+            'hubcentral-admin-script' => array(
                 'src'     => HUBCENTRAL_ASSETS . '/js/admin.js',
                 'version' => filemtime(HUBCENTRAL_PATH . '/assets/js/admin.js'),
                 'deps'    => array('jquery'),
@@ -124,7 +122,7 @@ class Assets
     public function get_admin_styles()
     {
         return array(
-            'HUBCENTRAL-admin-style' => array(
+            'hubcentral-admin-style' => array(
                 'src'     => HUBCENTRAL_ASSETS . '/css/admin.css',
                 'version' => filemtime(HUBCENTRAL_PATH . '/assets/css/admin.css'),
             ),

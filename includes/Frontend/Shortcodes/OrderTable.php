@@ -40,7 +40,8 @@ class OrderTable
      */
     public function enqueue_assets()
     {
-        wp_enqueue_script('vue', 'https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js', array(), null, true);
+        wp_enqueue_script('vue', HUBCENTRAL_ASSETS . '/js/vue.min.js', array(), null, true);
+        wp_enqueue_script('axios', HUBCENTRAL_ASSETS . '/js/axios.min.js', array(), null, true);
         wp_enqueue_script('hub-order-list-script', HUBCENTRAL_ASSETS . '/js/order-list.js', array('vue'), null, true);
     }
 
@@ -75,19 +76,15 @@ class OrderTable
         // Enqueue Vue.js and your Vue component script
         $this->enqueue_assets();
 
-        // Retrieve order data from the database
         $orders = get_posts(array(
             'post_type' => 'orders', // Your custom post type
             'posts_per_page' => -1,
         ));
 
-        // Format order data into an array
         $formatted_orders = array();
         foreach ($orders as $order) {
-            // Get order meta data
             $order_meta = get_post_meta($order->ID);
 
-            // Format order data
             $order_data = array(
                 'id' => isset($order_meta['order_id'][0]) ? $order_meta['order_id'][0] : '',
                 'customer_name' => isset($order_meta['billing_first_name'][0]) ? $order_meta['billing_first_name'][0] : '',
@@ -97,6 +94,7 @@ class OrderTable
                 'shipping_date' => isset($order_meta['date_created'][0]) ? date('Y-m-d', strtotime('+2 weeks', strtotime($order_meta['date_created'][0]))) : '',
                 'customer_note' => isset($order_meta['customer_note'][0]) ? $order_meta['customer_note'][0] : '',
                 'order_notes' => isset($order_meta['order_notes'][0]) ? $order_meta['order_notes'][0] : '',
+                'hub_item_id' => $order->ID,
             );
 
             // Combine first name and last name
@@ -188,14 +186,11 @@ class OrderTable
                         <textarea v-model="selectedOrder.order_notes" @change="updateOrderNotes"></textarea>
                     </div>
                     <button @click="closePopup">Close</button>
-                    <button @click="updateOrder">Update</button>
+                    <button id="hc-update-order" @click="updateOrder">Update</button>
                 </div>
             </div>
         </div>
 
-        <?php
-        // Pass formatted order data to Vue component
-        ?>
         <script type="text/javascript">
             var ordersData = <?php echo json_encode($formatted_orders); ?>;
         </script>

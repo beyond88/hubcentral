@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: HubCentral - Centralize Order Management. Empower Customer Support.
  * Description: Unify order views, update statuses, and collaborate on notes within a central hub, empowering your team for better order fulfillment.
@@ -21,16 +22,19 @@
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html 
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+use Automattic\WooCommerce\Client;
+
 /**
  * The main plugin class
  */
-final class HubCentral {
+final class HubCentral
+{
 
     /**
      * Plugin version
@@ -42,13 +46,13 @@ final class HubCentral {
     /**
      * Class constructor
      */
-    private function __construct() {
+    private function __construct()
+    {
         $this->define_constants();
 
-        register_activation_hook( __FILE__, [ $this, 'activate' ] );
+        register_activation_hook(__FILE__, [$this, 'activate']);
 
-        add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
-
+        add_action('plugins_loaded', [$this, 'init_plugin']);
     }
 
     /**
@@ -56,10 +60,11 @@ final class HubCentral {
      *
      * @return \HubCentral
      */
-    public static function init() {
+    public static function init()
+    {
         static $instance = false;
 
-        if ( ! $instance ) {
+        if (!$instance) {
             $instance = new self();
         }
 
@@ -71,18 +76,18 @@ final class HubCentral {
      *
      * @return void
      */
-    public function define_constants() {
-        define( 'HUBCENTRAL_VERSION', self::version );
-        define( 'HUBCENTRAL_FILE', __FILE__ );
-        define( 'HUBCENTRAL_PATH', __DIR__ );
-        define( 'HUBCENTRAL_URL', plugins_url( '', HUBCENTRAL_FILE ) );
-        define( 'HUBCENTRAL_ASSETS', HUBCENTRAL_URL . '/assets' );
-        define( 'HUBCENTRAL_BASENAME', plugin_basename( __FILE__ ) );
-        define( 'HUBCENTRAL_PLUGIN_NAME', 'HubCentral' );
-        define( 'HUBCENTRAL_MINIMUM_PHP_VERSION', '5.6.0' );
-        define( 'HUBCENTRAL_MINIMUM_WP_VERSION', '4.4' );
-        define( 'HUBCENTRAL_MINIMUM_WC_VERSION', '3.1' );
-
+    public function define_constants()
+    {
+        define('HUBCENTRAL_VERSION', self::version);
+        define('HUBCENTRAL_FILE', __FILE__);
+        define('HUBCENTRAL_PATH', __DIR__);
+        define('HUBCENTRAL_URL', plugins_url('', HUBCENTRAL_FILE));
+        define('HUBCENTRAL_ASSETS', HUBCENTRAL_URL . '/assets');
+        define('HUBCENTRAL_BASENAME', plugin_basename(__FILE__));
+        define('HUBCENTRAL_PLUGIN_NAME', 'HubCentral');
+        define('HUBCENTRAL_MINIMUM_PHP_VERSION', '5.6.0');
+        define('HUBCENTRAL_MINIMUM_WP_VERSION', '4.4');
+        define('HUBCENTRAL_MINIMUM_WC_VERSION', '3.1');
     }
 
     /**
@@ -90,23 +95,23 @@ final class HubCentral {
      *
      * @return void
      */
-    public function init_plugin() {
+    public function init_plugin()
+    {
 
         new HubCentral\Assets();
         new HubCentral\HubCentrali18n();
 
-        if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+        if (defined('DOING_AJAX') && DOING_AJAX) {
             new HubCentral\Ajax();
         }
 
-        if ( is_admin() ) {
+        if (is_admin()) {
             new HubCentral\Admin();
         } else {
             new HubCentral\Frontend();
         }
 
         new HubCentral\API();
-
     }
 
     /**
@@ -114,7 +119,8 @@ final class HubCentral {
      *
      * @return void
      */
-    public function activate() {
+    public function activate()
+    {
         $installer = new HubCentral\Installer();
         $installer->run();
     }
@@ -123,7 +129,8 @@ final class HubCentral {
 /**
  * Initializes the main plugin
  */
-function hubcentral() {
+function hubcentral()
+{
     return HubCentral::init();
 }
 
