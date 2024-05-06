@@ -101,10 +101,6 @@ final class HubCentral
         new HubCentral\Assets();
         new HubCentral\HubCentrali18n();
 
-        if (defined('DOING_AJAX') && DOING_AJAX) {
-            new HubCentral\Ajax();
-        }
-
         if (is_admin()) {
             new HubCentral\Admin();
         } else {

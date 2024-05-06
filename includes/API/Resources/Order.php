@@ -54,6 +54,7 @@ class Order
 
         // Check if the post was successfully created
         if (is_wp_error($post_id)) {
+            //error_log('Failed to create order', print_r($data));
             return new WP_REST_Response(array('error' => 'Failed to create order'), 500);
         }
 
@@ -120,23 +121,21 @@ class Order
                 $updated_note = '';
                 if ($existing_notes) {
                     foreach ($existing_notes as $note) {
-                        $updated_note .= $note->content . "\n"; // Replace "\n" with your desired separator
+                        if (isset($note->note)) {
+                            $updated_note .= $note->note . "\n";
+                        }
                     }
                 }
                 $updated_note .= $data['note'];
 
                 $note_data = [
-                    'note' => trim($updated_note), // Remove leading/trailing whitespace
+                    'note' => trim($updated_note),
                 ];
 
-                // Update the order note
                 $woocommerce->post("orders/$order_id/notes", $note_data);
             }
 
-            // Update order using WooCommerce REST API
             $response = $woocommerce->put('orders/' . $order_id, $order_data);
-
-            // Check for successful update
             if (isset($response->id)) {
 
                 update_post_meta($data['hub_item_id'], 'status', $data['status']);
