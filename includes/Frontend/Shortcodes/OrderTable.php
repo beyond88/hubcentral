@@ -140,29 +140,36 @@ class OrderTable
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="order in paginatedOrders">
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.customer_name }}</td>
-                        <td>{{ order.email }}</td>
-                        <td>{{ order.status }}</td>
-                        <td>{{ order.order_date }}</td>
-                        <td>{{ order.shipping_date }}</td>
-                        <td>{{ order.customer_note }}</td>
-                        <td>{{ order.order_notes }}</td>
-                        <td>
-                            <?php
-                            if (Helper::user_has_permission()) {
-                            ?>
-                                <button type="button" class="action-view-order" @click="openPopup(order)">
-                                    <?php echo __('View', 'hubcentral'); ?>
-                                </button>
-                            <?php } else { ?>
-                                <button type="button" class="action-read-only">
-                                    <?php echo __('View', 'hubcentral'); ?>
-                                </button>
-                            <?php } ?>
-                        </td>
-                    </tr>
+                    <?php if (!empty($formatted_orders)) { ?>
+                        <tr v-for="order in paginatedOrders">
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.customer_name }}</td>
+                            <td>{{ order.email }}</td>
+                            <td>{{ order.status }}</td>
+                            <td>{{ order.order_date }}</td>
+                            <td>{{ order.shipping_date }}</td>
+                            <td>{{ order.customer_note }}</td>
+                            <td>{{ order.order_notes }}</td>
+                            <td>
+                                <?php
+                                if (Helper::user_has_permission()) {
+                                ?>
+                                    <button type="button" class="action-view-order" @click="openPopup(order)">
+                                        <?php echo __('View', 'hubcentral'); ?>
+                                    </button>
+                                <?php } else { ?>
+                                    <button type="button" class="action-read-only">
+                                        <?php echo __('View', 'hubcentral'); ?>
+                                    </button>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="9"><?php echo __('Data not found!', 'hubcentral'); ?></td>
+                        </tr>
+                    <?php }  ?>
+
                 </tbody>
             </table>
             <!-- Pagination buttons -->

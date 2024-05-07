@@ -29,7 +29,6 @@ class HubCentralAPI
      */
     public function __construct()
     {
-
         $this->base_url = get_option('wc_settings_tab_storeconnect_base_url');
         $this->is_enable = get_option('wc_settings_tab_storeconnect_is_enable');
     }

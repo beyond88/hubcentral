@@ -29,7 +29,7 @@ $setting_options = wp_parse_args(get_option($this->_optionName), $this->_default
                                             <td class="hubcentral-control">
                                                 <div class="hubcentral-control-wrapper">
                                                     <input class="hubcentral-settings-field" type="text" name="hubcentral_settings[base_url]" value="<?php echo isset($setting_options['base_url']) ? esc_attr($setting_options['base_url']) : ''; ?>" placeholder="Base URL">
-                                                    <p class="hubcentral-field-help"><strong>Note:</strong> Set WooCommerce endpoint URL</p>
+                                                    <p class="hubcentral-field-help"><strong>Note:</strong> Just set target website url i.e. https://www.example.com/</p>
                                                 </div>
                                             </td>
                                         </tr>

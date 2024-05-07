@@ -33,7 +33,7 @@ class Assets
     public function get_styles()
     {
         return array(
-            'HUBCENTRAL-style' => array(
+            'hubcentral-style' => array(
                 'src'     => HUBCENTRAL_ASSETS . '/css/frontend.css',
                 'version' => filemtime(HUBCENTRAL_PATH . '/assets/css/frontend.css'),
             ),
